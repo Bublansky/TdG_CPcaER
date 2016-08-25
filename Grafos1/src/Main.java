@@ -3,18 +3,20 @@ import java.util.ArrayList;
 import  java.util.Scanner;
 public class Main
 {
-    public static final String PASSEIO = "passeio";
-    public static final String CAMINHO = "caminho";
-    public static final String TRILHA = "trilha";
-    public static final String CIRCUITO = "circuito";
-    public static final String CICLO = "ciclo";
-    public static final String HAMILTONIANO = "hamiltoniano";
-    public static final String EULERIANO = "euleriano";
+    private static final String PASSEIO = "passeio";
+    private static final String CAMINHO = "caminho";
+    private static final String TRILHA = "trilha";
+    private static final String CIRCUITO = "circuito";
+    private static final String CICLO = "ciclo";
+    private static final String HAMILTONIANO = "hamiltoniano";
+    private static final String EULERIANO = "euleriano";
+    private static Scanner entrada = new Scanner(System.in);
     
     public static void main(String[] args)
     {
-        Scanner entrada = new Scanner(System.in);
+        
         int ordem, testes, i, j;
+        String acao;
         Grafo g;
         
         // leitura da ordem da matriz
@@ -38,19 +40,81 @@ public class Main
         // leitura dos testes
         for(i = 0 ; i < testes ; i++)
         {
+            acao = entrada.nextLine();
+            switch(acao)
+            {
+                case PASSEIO:
+                    doPasseio();
+                    break;
+                case CAMINHO:
+                    doCaminho();
+                    break;
+                case TRILHA:
+                    doTrilha();
+                    break;
+                case CIRCUITO:
+                    doCircuito();
+                    break;
+                case CICLO:
+                    doCiclo();
+                    break;
+                case HAMILTONIANO:
+                    doHamiltoniano();
+                    break;
+                case EULERIANO:
+                    doEuleriano();
+                    break;
+            }
+        }
+    }
+    
+    private static void doPasseio()
+    {
+        String vertice = entrada.next();
+        while(vertice != )
+        {
             
         }
+    }
+    private static void doCaminho()
+    {
+        
+    }
+    private static void doTrilha()
+    {
+        
+    }
+    private static void doCircuito()
+    {
+        
+    }
+    private static void doCiclo()
+    {
+        
+    }
+    private static void doHamiltoniano()
+    {
+        
+    }
+    private static void doEuleriano()
+    {
+        
     }
     
     private static class Grafo
     {
         private int adj[][];
         private int vertices = 0;
-        
+
         public Grafo(int quantidade)
         {
             vertices = quantidade;
             adj = new int [quantidade + 1][quantidade + 1];
+        }
+        
+        public int getAresta(int origem, int destino)
+        {
+            return adj[origem][destino];
         }
         
         public void AddAresta(int linha, int coluna, int value)
