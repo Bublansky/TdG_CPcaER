@@ -1,0 +1,21 @@
+8 12
+0 1 0 1 1 0 0 0
+1 0 1 0 0 1 0 0
+0 1 0 1 0 0 1 0
+1 0 1 0 0 0 0 1
+1 0 0 0 0 1 0 1
+0 1 0 0 1 0 1 0
+0 0 1 0 0 1 0 1
+0 0 0 1 1 0 1 0
+euleriano
+hamiltoniano
+circuito 5-6-7-8-5
+ciclo 1-2-6-1
+ciclo 1-2-6-5-1
+trilha 1-2-6-5-1
+passeio 1-2-6-5-1
+caminho 1-2-6-5
+passeio 4-8-6-2
+ciclo 8-7-6-5-8
+trilha 8-7-6-5-8
+passeio 1-2-3-4-5-6-7-8

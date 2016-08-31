@@ -1,3 +1,5 @@
+import com.sun.javafx.geom.AreaOp;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import  java.util.Scanner;
 class Main
@@ -15,6 +17,7 @@ class Main
     
     public static void main(String[] args)
     {
+        
         
         int ordem, testes, i, j;
         String acao;
@@ -60,7 +63,7 @@ class Main
                     System.out.println(g.doCiclo(getVertices()));
                     break;
                 case HAMILTONIANO:
-                    System.out.println(g.doHamiltoniano());
+                    System.out.println(g.Hamiltoniano());
                     break;
                 case EULERIANO:
                     System.out.println(g.doEuleriano());
@@ -70,6 +73,8 @@ class Main
                     break;
             }
         }
+        //g.Permut();
+        //System.out.println(g.Permutacao());
         //System.out.println("Main.main()");
     }
     
@@ -86,7 +91,6 @@ class Main
         }
         return vs;
     }
-    
     
     private static class Grafo
     {
@@ -111,6 +115,27 @@ class Main
             adj[linha][coluna] = value;
         }
         
+        private boolean conexo()
+        {
+            int grau;
+            for(int i = 1 ; i < vertices + 1 ; i++)
+            {
+                grau = 0;
+                for(int j = 1 ; j < vertices + 1 ; j++)
+                {
+                    // se tiver vizinho
+                    if(getAresta(i, j) == 1)
+                    {
+                        grau++;
+                    }
+                }
+                if(grau == 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         private void setGraus()
         {
             for(int i = 1 ; i < vertices + 1 ; i++)
@@ -135,23 +160,17 @@ class Main
                 // se nao tiver aresta
                 if(getAresta(vertices.get(i), vertices.get(i + 1)) == 0)
                 {
-                    return POSITIVO;
+                    return NEGATIVO;
                 }
             }
-            return NEGATIVO;
+            return POSITIVO;
         }
         private String doCaminho(ArrayList<Integer> vertices)
         {
             //System.out.println("vetor: " + vertices);
-            int percorridos[] = new int[vertices.size() + 1];
+            int percorridos[] = new int[this.vertices + 1];
             int primeiro;
             
-            // preenchimento vazio dos vertices ja percorridos
-            for(int i = 0 ; i < percorridos.length ; i++)
-            {
-                percorridos[i] = 0;
-            
-            }
             primeiro = vertices.get(0);
             percorridos[primeiro] = 1;
             
@@ -167,18 +186,13 @@ class Main
                     return NEGATIVO;
                 }
                 // se o proximo ja tiver sido visitado
-                else if(percorridos[proximo] == 1)
+                if(percorridos[proximo] == 1)
                 {
                     // se o proximo nao for o primeiro
-                    if(proximo != primeiro)
-                    {
-                        return POSITIVO;
-                    }
-                    // se o proximo nao for o ultimo do passeio
-                    else if((i + 1) != (vertices.size() - 1))
+                    if(i != 0 || (i+1)!= vertices.size() - 1)
                     {
                         return NEGATIVO;
-                    }   
+                    } 
                 }
                 // marca o proximo como percorrido
                 percorridos[proximo] = 1;
@@ -187,20 +201,10 @@ class Main
         }
         private String doTrilha(ArrayList<Integer> vertices)
         {
-            int quantidade = vertices.size();
-            int percorridas[][] = new int [quantidade + 1][quantidade + 1];
+            int percorridas[][] = new int [this.vertices+1][this.vertices + 1];
             int i;
-            
-            // preenchimento vazio das arestas ja visitadas
-            for(i = 1 ; i < percorridas.length ; i++)
-            {
-                for(int j = 1 ; j < percorridas.length ; j++)
-                {
-                    percorridas[i][j] = 0;
-                }
-            }
-            
-            for(i = 0 ; i < quantidade - 1 ; i++)
+                        
+            for(i = 0 ; i < vertices.size() - 1 ; i++)
             {
                 int atual = vertices.get(i);
                 int proximo = vertices.get(i + 1);
@@ -230,7 +234,7 @@ class Main
                 return NEGATIVO;
             }
             // se nao for trilha
-            else if(doTrilha(vertices).equals(NEGATIVO))
+            if(doTrilha(vertices).equals(NEGATIVO))
             {
                 return NEGATIVO; 
             }
@@ -265,28 +269,149 @@ class Main
             }
             return POSITIVO;
         }
-        private String doHamiltoniano()
+        
+        public String Hamiltoniano()
         {
-            boolean menor = false;
-            // teorema de dirac
-            // se tiver 3 ou mais vertices
-            if(vertices > 2)
+            //ArrayList<Integer> Vertices = new ArrayList<>();
+            String Vertices = "";
+            int i;
+            int[][] arestas = new int [vertices+1][vertices+1];
+            int[] visitados = new int[vertices+1];
+            boolean canPrint = true;
+            boolean flag = true;
+            
+            
+            if(!conexo())
             {
-                setGraus();
-                for(int i = 1 ; i < vertices + 1 ; i++)
+                if(canPrint)
                 {
-                    if(graus[i] < vertices / 2)
-                    {
-                        menor = true;
-                        break;
-                    }
+                    System.out.println("1");
                 }
-                if(!menor)
+                
+                return  NEGATIVO;
+            }
+ 
+            for(i = 0 ; i < vertices ; i++)
+            {
+                Vertices += (i+1);
+            }
+            //System.out.println(Vertices);
+            ArrayList<String> permutacoes = Permutacao(Vertices);
+            
+            
+            // para cada permutacao
+            for(i = 0 ; i < permutacoes.size() ; i++)
+            {
+                // para cada caminho diferente
+                String atual = permutacoes.get(i);
+                String primeiro = "";
+                primeiro += atual.charAt(0);
+                
+                visitados[Integer.parseInt(primeiro)] = 1;
+                
+                // para cada vertice do caminho atual
+                for(int k = 0 ; k < vertices - 1 ; k++)
                 {
-                    return POSITIVO;
+                    int indiceAtual, indiceProximo;
+                    String caracter  = "";
+                    caracter += atual.charAt(k);
+                    indiceAtual = Integer.parseInt(caracter);
+                    caracter  = "";
+                    caracter += atual.charAt(k+1);
+                    indiceProximo = Integer.parseInt(caracter);
+                    
+                    // se nao tiver aresta
+                    if(adj[indiceAtual][indiceProximo] != 1)
+                    {
+                        if(canPrint)
+                        {
+                            System.out.println("2");
+                        }
+                        flag = false;
+                    }
+                    // se a aresta ja tiver sido visitada
+                    if(arestas[indiceAtual][indiceProximo] == 1)
+                    {
+                        if(canPrint)
+                        {
+                            System.out.println("3");
+                        }
+                        flag = false;
+                    }
+                    // se o vertice ja tiver sido visitado
+                    if(visitados[indiceAtual] == 1)
+                    {
+                        // se o atual nao for o primeiro ou o ultimo
+                        if(k!=0 || (k+1)!= vertices - 1)
+                        {
+                            if(canPrint)
+                            {
+                                System.out.println("4");
+                            }
+                            flag = false;
+                        }
+                    }
+                    arestas[indiceAtual][indiceProximo] = 1;
+                }
+                flag = true;
+            }
+            
+            return (flag)? POSITIVO : NEGATIVO;
+            
+        }
+        // referencia: http://www.inf.ufrgs.br/~lgfischer/arquivos/Graduacao/Complexidade/apresentacao.pdf
+        private ArrayList<String> Permutacao(String s)
+        {
+            ArrayList<String> R = new ArrayList<>();
+            int k;
+            
+            if(s.length() <= 1)
+            {
+                R.add(s);
+                return R;
+            }
+            
+            for(int c = 0 ; c < s.length() ; c++)
+            {
+                String s_ = "";
+                for(k = 0 ; k < c ; k++)
+                {
+                    s_ += s.charAt(k);
+                }
+                for(k = c+1 ; k<s.length() ; k++)
+                {
+                    s_ += s.charAt(k);
+                }        
+                ArrayList<String> P = Permutacao(s_);
+                
+                for(int p = 0 ; p < P.size() ; p++)
+                {
+                    String add = "";
+                    add += s.charAt(c);
+                    add += P.get(p);
+                    R.add(add);
                 }
             }
-            return POSITIVO;
+            return R;
+        }
+        
+        private boolean isHamiltonian(int[] passeio)
+        {
+            int[][] arestasVisitadas = new int[vertices+1][vertices+1];
+            int[] verticesVisitados = new int[vertices+1];
+            
+            return false;
+        }
+        private boolean temMovel(int[] permutacao)
+        {
+            for(int vertice : permutacao)
+            {
+                if(vertice > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
         private String doEuleriano()
         {
@@ -299,7 +424,7 @@ class Main
             for(i = 1 ; i < vertices + 1 ; i++)
             {
                 // se for impar
-                if(graus[i] % 2 != 0)
+                if(graus[i] % 2 != 0 || graus[i] == 0)
                 {
                     return NEGATIVO;
                 }

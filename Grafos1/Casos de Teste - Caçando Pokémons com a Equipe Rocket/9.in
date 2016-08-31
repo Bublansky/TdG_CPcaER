@@ -1,0 +1,13 @@
+5 7
+0 1 1 1 0
+1 0 0 0 0
+1 0 0 1 0
+1 0 1 0 0
+0 0 0 0 0
+passeio 1-2-1-3-4-1
+ciclo 1-3-4-1
+circuito 1-3-4-1
+hamiltoniano
+euleriano
+trilha 1-3-4
+passeio 1-2-1-3-4-1-2-1-3-4-1
